@@ -10,11 +10,15 @@ lives_remaining = 3
 game_clock = pygame.time.Clock()
 
 
-# Brick class here.  Bricks are 20 pixels wide by 5 pixels high.
+# Brick class here.  Bricks are 80 pixels wide by 20 pixels high.
 class Brick(Sprite):
     def __init__(self, x_position = 0, y_position = 0):
         Sprite.__init__(self)
-        self.isBonusBrick = randint(1,100)
+        if randint(1,100) <= 10:
+            self.isBonusBrick = True
+        else:
+            self.isBonusBrick = False
+        print(self.isBonusBrick)
         self.image = pygame.Surface([80, 20])
         self.image.fill(self.decideBrickColor())
         self.rect = self.image.get_rect()
@@ -22,12 +26,10 @@ class Brick(Sprite):
         
 
     def decideBrickColor(self):
-        if self.isBonusBrick <= 10:
-            return (0,39,76)
-        else:
+        if self.isBonusBrick:
             return (255, 203, 5)
-
-
+        else:
+            return (0,39,76)
 
 # Ball class here
 
@@ -45,8 +47,11 @@ screen.fill(screen_color)
 display.set_caption('Brandon Breakout')
 mouse.set_visible(False)
 
-Brick = Brick(45, 55)
-sprites = RenderPlain(Brick)
+# Generate row of bricks
+row = pygame.sprite.Group()
+for i in range(0,10):
+    row.add(Brick(5+40 * i + 5 * i, 55))
+sprites = RenderPlain(row)
 
 # Game loop
 while True:
