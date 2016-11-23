@@ -42,16 +42,17 @@ class Brick(Sprite):
 # Start game
 pygame.init()
 text = font.Font(None, 40)
-screen = display.set_mode((900, 900))
+screen = display.set_mode((900, 450))
 screen.fill(screen_color)
 display.set_caption('Brandon Breakout')
 mouse.set_visible(False)
 
 # Generate row of bricks
 row = pygame.sprite.Group()
-for i in range(0,10):
-    row.add(Brick(5+40 * i + 5 * i, 55))
-sprites = RenderPlain(row)
+for i in range(0, 5):
+    for j in range(0,9):
+        row.add(Brick(100 * j + 50, 55 + 25 * i))
+    sprites = RenderPlain(row)
 
 # Game loop
 while True:
