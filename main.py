@@ -18,7 +18,6 @@ class Brick(Sprite):
             self.isBonusBrick = True
         else:
             self.isBonusBrick = False
-        print(self.isBonusBrick)
         self.image = pygame.Surface([80, 20])
         self.image.fill(self.decideBrickColor())
         self.rect = self.image.get_rect()
@@ -48,11 +47,11 @@ display.set_caption('Brandon Breakout')
 mouse.set_visible(False)
 
 # Generate row of bricks
-row = pygame.sprite.Group()
+Wall = pygame.sprite.Group()
 for i in range(0, 5):
     for j in range(0,9):
-        row.add(Brick(100 * j + 50, 55 + 25 * i))
-    sprites = RenderPlain(row)
+        Wall.add(Brick(100 * j + 50, 55 + 25 * i))
+sprites = RenderPlain(Wall)
 
 # Game loop
 while True:
