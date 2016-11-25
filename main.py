@@ -4,7 +4,6 @@ from random import randint
 
 # Game constants
 screen_color = (250, 250, 250)
-initial_ball_speed = 1
 score = 0
 lives_remaining = 3
 game_clock = pygame.time.Clock()
@@ -31,13 +30,26 @@ class Brick(Sprite):
             return (0,39,76)
 
 # Ball class here
-
+class Ball(Sprite):
+    def __init__(self, init_x = 450, init_v_x = 0, init_y = 200, init_v_y = 0):
+        self.x = init_x
+        self.y = init_y
+        self.vx = init_v_x
+        self.vy = init_v_y
+        pygame.sprite.Sprite.__init__(self)
+        self.image=pygame.Surface((30,30))
+        self.image.fill(screen_color)
+        pygame.draw.circle(self.image,(255,0,0),(15,15),15,0)
+        self.rect=self.image.get_rect()
+    def update(self):
+        self.x += self.vx / 30
+        self.y += self.vy / 30
+        self.rect.center = (self.x, self.y)
 
 # Paddle class here
 
 
 # Game window
-
 # Start game
 pygame.init()
 text = font.Font(None, 40)
@@ -51,17 +63,20 @@ Wall = pygame.sprite.Group()
 for i in range(0, 5):
     for j in range(0,9):
         Wall.add(Brick(100 * j + 50, 55 + 25 * i))
-sprites = RenderPlain(Wall)
+
+Game_ball = Ball(init_v_x = 50, init_v_y = 50)
+sprites = RenderPlain(Wall, Game_ball)
 
 # Game loop
 while True:
-    
+
     # Quit game on command
     e = event.poll()
     if e.type == QUIT:
         quit()
         break
 
+    screen.fill(screen_color)
     # Scoreboard takes up entire width and 40 pixels of height.
     pygame.draw.rect(screen,(230, 230, 230),(0, 0, 900, 40))
     lives_display = text.render("Lives Remaining: " + str(lives_remaining), 1, (0,39,76))
