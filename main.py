@@ -36,7 +36,7 @@ class Ball(Sprite):
         self.y = init_y
         self.vx = init_v_x
         self.vy = init_v_y
-        pygame.sprite.Sprite.__init__(self)
+        Sprite.__init__(self)
         self.image=pygame.Surface((30,30))
         self.image.fill(screen_color)
         pygame.draw.circle(self.image,(255,0,0),(15,15),15,0)
@@ -47,6 +47,13 @@ class Ball(Sprite):
         self.rect.center = (self.x, self.y)
 
 # Paddle class here
+class Paddle(Sprite):
+    def __init__(self, init_x = 30, init_y = 420):
+        Sprite.__init__(self)
+        self.image = pygame.Surface([60, 10])
+        self.image.fill((0, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = (init_x, init_y)
 
 
 # Game window
@@ -65,7 +72,8 @@ for i in range(0, 5):
         Wall.add(Brick(100 * j + 50, 55 + 25 * i))
 
 Game_ball = Ball(init_v_x = 50, init_v_y = 50)
-sprites = RenderPlain(Wall, Game_ball)
+Bumper = Paddle()
+sprites = RenderPlain(Wall, Game_ball, Bumper)
 
 # Game loop
 while True:
