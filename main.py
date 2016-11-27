@@ -48,13 +48,25 @@ class Ball(Sprite):
 
 # Paddle class here
 class Paddle(Sprite):
-    def __init__(self, init_x = 30, init_y = 420):
+    def __init__(self, init_x = 450, init_y = 420):
         Sprite.__init__(self)
+        self.x = init_x
+        self.y = init_y
+        self.movement_speed = 6
         self.image = pygame.Surface([60, 10])
         self.image.fill((0, 0, 0))
         self.rect = self.image.get_rect()
-        self.rect.center = (init_x, init_y)
+        self.rect.center = (self.x, self.y)
 
+    def get_input(self):
+        key = pygame.key.get_pressed()
+        if key[pygame.K_LEFT]:
+            self.x -= self.movement_speed
+        elif key[pygame.K_RIGHT]:
+            self.x += self.movement_speed
+
+    def update(self):
+        self.rect.center = (self.x, self.y)
 
 # Game window
 # Start game
@@ -83,6 +95,8 @@ while True:
     if e.type == QUIT:
         quit()
         break
+
+    Bumper.get_input()
 
     screen.fill(screen_color)
     # Scoreboard takes up entire width and 40 pixels of height.
