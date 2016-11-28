@@ -8,7 +8,6 @@ score = 0
 lives_remaining = 3
 game_clock = pygame.time.Clock()
 
-
 # Brick class here.  Bricks are 80 pixels wide by 20 pixels high.
 class Brick(Sprite):
     def __init__(self, x_position = 0, y_position = 0):
@@ -41,10 +40,16 @@ class Ball(Sprite):
         self.image.fill(screen_color)
         pygame.draw.circle(self.image,(255,0,0),(15,15),15,0)
         self.rect=self.image.get_rect()
+
     def update(self):
         self.x += self.vx / 30
         self.y += self.vy / 30
         self.rect.center = (self.x, self.y)
+
+    def bounce(self):
+        sound = pygame.mixer.Sound("sounds/bounce.wav")
+        sound.play()
+
 
 # Paddle class here
 class Paddle(Sprite):
@@ -62,11 +67,17 @@ class Paddle(Sprite):
         key = pygame.key.get_pressed()
         if key[pygame.K_LEFT]:
             self.x -= self.movement_speed
+            self.playSound()
         elif key[pygame.K_RIGHT]:
             self.x += self.movement_speed
+            self.playSound()
 
     def update(self):
         self.rect.center = (self.x, self.y)
+
+    def playSound(self):
+        sound = pygame.mixer.Sound("sounds/move.wav")
+        sound.play()
 
 # Game window
 # Start game
@@ -86,6 +97,8 @@ for i in range(0, 5):
 Game_ball = Ball(init_v_x = 50, init_v_y = 50)
 Bumper = Paddle()
 sprites = RenderPlain(Wall, Game_ball, Bumper)
+
+
 
 # Game loop
 while True:
