@@ -45,6 +45,9 @@ class Ball(Sprite):
         self.x += self.vx / 30
         self.y += self.vy / 30
         self.rect.center = (self.x, self.y)
+    
+    def collidedWith(self, target):
+        return self.rect.colliderect(target)
 
     def bounce(self):
         sound = pygame.mixer.Sound("sounds/bounce.wav")
@@ -59,7 +62,7 @@ class Paddle(Sprite):
         self.y = init_y
         self.movement_speed = 6
         self.image = pygame.Surface([60, 10])
-        self.image.fill((0, 0, 0))
+        self.image.fill((0,39,76))
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
 
@@ -98,8 +101,6 @@ Game_ball = Ball(init_v_x = 50, init_v_y = 50)
 Bumper = Paddle()
 sprites = RenderPlain(Wall, Game_ball, Bumper)
 
-
-
 # Game loop
 while True:
 
@@ -110,6 +111,10 @@ while True:
         break
 
     Bumper.get_input()
+
+    if Game_ball.collidedWith(Bumper):
+        Game_ball.bounce()
+        Game_ball.vy *= -1
 
     screen.fill(screen_color)
     # Scoreboard takes up entire width and 40 pixels of height.
