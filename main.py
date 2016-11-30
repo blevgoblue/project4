@@ -27,6 +27,16 @@ class Brick(Sprite):
         else:
             return (0,39,76)
 
+    def kill(self):
+        sound = pygame.mixer.Sound("sounds/points.wav")
+        sound.play()
+        global score
+        if self.isBonusBrick:
+            score += 100
+        else:
+            score += 10
+        Sprite.kill(self)
+
 # Ball class here
 class Ball(Sprite):
     def __init__(self, init_x = 450, init_v_x = 0, init_y = 200, init_v_y = 0):
@@ -96,7 +106,9 @@ for i in range(0, 5):
     for j in range(0,9):
         Wall.add(Brick(100 * j + 50, 55 + 25 * i))
 
+Balls = pygame.sprite.Group()
 Game_ball = Ball(init_v_x = 50, init_v_y = 50)
+Balls.add(Game_ball)
 Bumper = Paddle()
 sprites = RenderPlain(Wall, Game_ball, Bumper)
 
@@ -139,6 +151,9 @@ while True:
         Game_ball.vy = 50
         lives_remaining -= 1
 
+    if pygame.sprite.groupcollide(Balls, Wall, False, True):
+        Game_ball.vy *= -1
+    
 
     screen.fill(screen_color)
     # Scoreboard takes up entire width and 40 pixels of height.
