@@ -5,7 +5,7 @@ from random import randint
 # Game constants
 screen_color = (250, 250, 250)
 score = 0
-lives_remaining = 3
+lives_remaining = 1
 game_clock = pygame.time.Clock()
 
 # Brick class here.  Bricks are 80 pixels wide by 20 pixels high.
@@ -21,7 +21,6 @@ class Brick(Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x_position, y_position)
         
-
     def decideBrickColor(self):
         if self.isBonusBrick:
             return (255, 203, 5)
@@ -116,13 +115,50 @@ while True:
         Game_ball.bounce()
         Game_ball.vy *= -1
 
+    # Check left edge
+    if Game_ball.x <= 0:
+        Game_ball.bounce()
+        Game_ball.vx *= -1
+    # Check right edge
+    if Game_ball.x >= 900:
+        Game_ball.bounce()
+        Game_ball.vx *= -1
+    # Check top edge
+    if Game_ball.y <= 50:
+        Game_ball.bounce()
+        Game_ball.vy *= -1
+
+    # Life loss condition
+    if Game_ball.y >= 425:
+        sound = pygame.mixer.Sound("sounds/lostLife.wav")
+        sound.play()
+        pygame.time.delay(3000)
+        Game_ball.x = 450
+        Game_ball.y = 200
+        Game_ball.vx = 50
+        Game_ball.vy = 50
+        lives_remaining -= 1
+
+
     screen.fill(screen_color)
     # Scoreboard takes up entire width and 40 pixels of height.
     pygame.draw.rect(screen,(230, 230, 230),(0, 0, 900, 40))
-    lives_display = text.render("Lives Remaining: " + str(lives_remaining), 1, (0,39,76))
-    screen.blit(lives_display, (630, 5))
+    if lives_remaining >= 0:
+        lives_display = text.render("Lives Remaining: " + str(lives_remaining), 1, (0,39,76))
+        screen.blit(lives_display, (630, 5))
+    else:
+        lives_display = text.render("GAME OVER.", 1, (0,39,76))
+        screen.blit(lives_display, (700, 5))
     current_score = text.render("Score: " + str(score), 1, (255,203,5))
     screen.blit(current_score, (10, 5))
+
+    # GAME OVER condition
+    if lives_remaining == 0:
+        sound = pygame.mixer.Sound("sounds/gameOver.wav")
+        sound.play()
+        sprites.remove(Game_ball)
+        sprites.remove(Bumper)
+        lives_remaining -= 1
 
     # Update game objects on each loop
     sprites.update()
