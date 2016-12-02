@@ -100,12 +100,15 @@ screen.fill(screen_color)
 display.set_caption('Brandon Breakout')
 mouse.set_visible(False)
 
-# Generate row of bricks
+# Group of bricks
 Wall = pygame.sprite.Group()
+# Create columns of bricks
 for i in range(0, 5):
+    # Create rows of bricks
     for j in range(0,9):
         Wall.add(Brick(100 * j + 50, 55 + 25 * i))
 
+# Game objects
 Balls = pygame.sprite.Group()
 Game_ball = Ball(init_v_x = 50, init_v_y = 50)
 Balls.add(Game_ball)
@@ -120,7 +123,8 @@ while True:
     if e.type == QUIT:
         quit()
         break
-
+    
+    # Tell bumper to check keyboard
     Bumper.get_input()
 
     if Game_ball.collidedWith(Bumper):
@@ -151,11 +155,13 @@ while True:
         Game_ball.vy = 50
         lives_remaining -= 1
 
+    # If ball hits brick
     if pygame.sprite.groupcollide(Balls, Wall, False, True):
         Game_ball.vy *= -1
     
-
+    # Paint background to fill
     screen.fill(screen_color)
+
     # Scoreboard takes up entire width and 40 pixels of height.
     pygame.draw.rect(screen,(230, 230, 230),(0, 0, 900, 40))
     if lives_remaining >= 0:
@@ -179,4 +185,3 @@ while True:
     sprites.update()
     sprites.draw(screen)
     display.update()
-
